@@ -1,6 +1,5 @@
 // Pointers
 let p5canvas;
-let bfs;
 
 // The grid of nodes displayed on screen.
 let grid = [];
@@ -34,19 +33,12 @@ function setup()
     // Assign mouse presses to only register on canvas.
     p5canvas.mousePressed(checkCanvasMouse);
 
-    makeGrid();
-}
-
-function makeGrid()
-{
     // Clear vars for 'Update Grid!'.
     background(255);
-    bfs = null;
-    grid = [];
     source = null;
     target = null;
 
-    // Get the wall frequncy
+    // Get the wall frequency
     var e = document.getElementById("selectWallFrequency");
     var wallFrequency = e.options[e.selectedIndex].value;
 
@@ -57,84 +49,56 @@ function makeGrid()
     number_of_columns = Math.floor(p5canvas.width / size_of_tile);
     number_of_rows = Math.floor(p5canvas.height / size_of_tile);
 
-    // Create empty array.
-    grid = make2Darray(number_of_columns, number_of_rows);
-
-    var xPos = 0;
-    var yPos = 0;
-
-    // Fill array with GridNode instances
-    for (var i = 0; i < number_of_columns; i++)
-    {
-        for (var j = 0; j < number_of_rows; j++)
-        {
-            grid[i][j] = new GridNode(i, j, xPos, yPos, size_of_tile, wallFrequency);
-            xPos += size_of_tile;
-        }
-        // Reset xPos to start of row.
-        xPos = 0;
-
-        // And increase the y position for 1 node down.
-        yPos += size_of_tile;
-    }
+    apiSetGrid(number_of_rows, number_of_columns);
+    apiGetGrid();
 
     // Initial draw of grid.
-    for (var i = 0; i < number_of_columns; i++)
-    {
-        for (var j = 0; j < number_of_rows; j++)
-        {
-            grid[i][j].draw();
-        }
-    }
+    // for (var i = 0; i < number_of_columns; i++)
+    // {
+    //     for (var j = 0; j < number_of_rows; j++)
+    //     {
+    //         grid[i][j].draw();
+    //     }
+    // }
 
 }
 
-/**
- * Helper function to create 2d array.
- * 
- * @param {*} cols 
- * @param {*} rows 
- */
-function make2Darray(cols, rows)
+function apiSetGrid(rows, cols)
 {
-    var arr = new Array(cols);
-    for (var i = 0; i < arr.length; i++)
+    fetch('http://localhost:5000/api/test',
     {
-        arr[i] = new Array(rows);
-    }
-    return arr;
+        method: 'POST',
+        body: JSON.stringify(
+        {
+            rows: rows,
+            cols: cols
+        }),
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+    })
 }
+
+function apiGetGrid()
+{
+    fetch('http://localhost:5000/api/test')
+    .then((response) => response.json())
+    .then((data) => {
+        let gridKey = Object.keys(data)[0];
+        console.log("grid key: " + gridKey);
+        grid = data[gridKey];
+        console.log("grid: " + grid[0][0]);
+    })
+
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
 
 /**
  * Loop through grid and call draw.
  */
-var counter = 0;
 function draw()
 {
-    if (grid)
-    {
-        counter = counter + 1;
-        if (counter > 10)
-        {
-            counter = 0;
-            if (bfs != null && bfs.frontier.length > 0)
-            {
-                bfs.findPath();
-            }
-        }
-
-        if (bfs != null && bfs.frontier.length > 0)
-        {
-            for (var i = 0; i < bfs.frontier.length; i++)
-            {
-                if (bfs.frontier[i].id != 'source')
-                {
-                    bfs.frontier[i].draw();
-                }
-            }
-        }
-    }
-
 }
 
 /**
@@ -201,23 +165,4 @@ function checkCanvasMouse()
         grid[ny][nx].draw();
     }
 
-}
-
-/**
- * Start the pathfinder if source and target are set.
- */
-function goForIt()
-{
-    if (source === null || target === null)
-    {
-        alert("Source and/or target not set!");
-        return;
-    }
-
-    // Initialize the Bfs.
-    bfs = new Bfs(grid, number_of_columns, number_of_rows);
-
-    bfs.init(source, target);
-
-    bfs.findPath();
 }

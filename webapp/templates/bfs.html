@@ -115,7 +115,7 @@
 
         request.send();
     </script> -->
-    <script>
+    <!-- <script>
         var grid = [];
 
         function apiTestGet()
@@ -167,8 +167,10 @@
             // .then(data => grid)
             // console.log(grid);
         }
-    </script>
-    <!-- <script src="includes/js/p5.min.js"></script> -->
+    </script> -->
+
+    <script src="{{ url_for('static', filename='includes/js/p5.min.js') }}"></script>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='includes/css/custom.css') }}"> -->
     <!-- <script src="includes/js/addons/p5.dom.min.js"></script>
     <script src="includes/js/addons/p5.sound.min.js"></script> -->
 
@@ -176,6 +178,6 @@
     <script src="includes/js/AI_maths_lib.js"></script>
     <script src="includes/js/Bfs.js"></script> -->
 
-    <!-- <script src="includes/js/sketch.js"></script> -->
+    <script src="{{ url_for('static', filename='includes/js/sketch.js') }}"></script>
 
 {% endblock content %}
