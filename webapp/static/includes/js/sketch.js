@@ -49,8 +49,9 @@ function setup()
     number_of_columns = Math.floor(p5canvas.width / size_of_tile);
     number_of_rows = Math.floor(p5canvas.height / size_of_tile);
 
-    apiSetGrid(number_of_rows, number_of_columns);
-    apiGetGrid();
+    // apiSetGrid(number_of_rows, number_of_columns);
+
+    // apiGetGrid();
 
     // Initial draw of grid.
     // for (var i = 0; i < number_of_columns; i++)
@@ -65,7 +66,7 @@ function setup()
 
 function apiSetGrid(rows, cols)
 {
-    fetch('http://localhost:5000/api/test',
+    fetch('http://localhost:5000/api/grid',
     {
         method: 'POST',
         body: JSON.stringify(
@@ -77,22 +78,79 @@ function apiSetGrid(rows, cols)
     })
 }
 
-function apiGetGrid()
+async function apiGetGrid()
 {
-    fetch('http://localhost:5000/api/test')
-    .then((response) => response.json())
-    .then((data) => {
-        let gridKey = Object.keys(data)[0];
-        console.log("grid key: " + gridKey);
-        grid = data[gridKey];
-        console.log("grid: " + grid[0][0]);
-    })
+    const response = await fetch('http://localhost:5000/api/grid')
+    const json = await response.json()
+    console.log(json)
+    // .then((response) => response.json())
+    // .then((data) => {
+    //     let gridKey = Object.keys(data)[0];
+    //     console.log("grid key: " + gridKey);
+    //     grid = data[gridKey];
+    //     console.log("grid length: " + grid.length);
+    //     console.log("grid: " + grid[4][4]);
 
-    .catch((err) => {
-        console.log(err);
-    });
+        // let n = grid[0][0];
+        // Object.keys(n).forEach(function(key)
+        // {
+        //     console.log("key: " + key + " value: " + n[key]);
+        // })
+
+        // for (var i = 0; i < number_of_columns; i++)
+        // {
+        //     for (var j = 0; j < number_of_rows; j++)
+        //     {
+        //         let n = grid[i][j];
+        //         Object.keys(n).forEach(function(key)
+        //         {
+        //             console.log("key: " + key + " value: " + n[key]);
+        //         })
+        //     }
+        // }
+
+    // })
+
+    // .catch((err) => {
+    //     console.log(err);
+    // });
 }
 
+// function apiGetGrid()
+// {
+//     fetch('http://localhost:5000/api/test')
+//     .then((response) => response.json())
+//     .then((data) => {
+//         let gridKey = Object.keys(data)[0];
+//         console.log("grid key: " + gridKey);
+//         grid = data[gridKey];
+//         console.log("grid length: " + grid.length);
+//         console.log("grid: " + grid[4][4]);
+
+//         // let n = grid[0][0];
+//         // Object.keys(n).forEach(function(key)
+//         // {
+//         //     console.log("key: " + key + " value: " + n[key]);
+//         // })
+
+//         // for (var i = 0; i < number_of_columns; i++)
+//         // {
+//         //     for (var j = 0; j < number_of_rows; j++)
+//         //     {
+//         //         let n = grid[i][j];
+//         //         Object.keys(n).forEach(function(key)
+//         //         {
+//         //             console.log("key: " + key + " value: " + n[key]);
+//         //         })
+//         //     }
+//         // }
+
+//     })
+
+//     .catch((err) => {
+//         console.log(err);
+//     });
+// }
 
 /**
  * Loop through grid and call draw.

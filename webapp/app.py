@@ -24,71 +24,104 @@ def bfs():
     title = 'Breadth First Search'
     return render_template('bfs.html', title=title)
 
+#####################################################
+class Test(Resource):
+    testGrid = [0,1,2,3,4,5]
+    rows = 0
+    cols = 0
+
+    messsage = "Test return"
+ 
+    def get(self):
+        if self.testGrid:
+            return {'test2-grid': self.testGrid}, 200
+
+        return {'data': 'test return'}, 200
+
+        # if self.grid:
+            # return {'grid': self.grid}, 200
+ 
+    def post(self):
+        self.testGrid = []
+        parser = reqparse.RequestParser()
+        parser.add_argument('rows', required=True)
+        parser.add_argument('cols', required=True)
+        args = parser.parse_args()
+ 
+        self.rows = int(args['rows'])
+        self.cols = int(args['cols'])
+ 
+        print(self.rows)
+        print(self.cols)
+
+        for r in range(self.rows):
+            row = []
+            for c in range(self.cols):
+                # Before type was <class 'dict'>
+                # serialized = json.dumps(nodeObj)
+                # row.append(serialized)
+                # After serialized type is <class # 'str'>
+                nodeObj = {
+                        "id": "blank",
+                        "x":c, "y":r,
+                        "x": 0, "y": 0,
+                        "drawX": 0, "drawY": 0,
+                        "visited": False,
+                        "parent": None
+                    }
+                serialized = json.dumps(nodeObj)
+                row.append(serialized)                
+                # row.append(nodeObj                
+            self.testGrid.append(row)
+
+        return {'message':'success', 'length': sum(len(x) for x in self.testGrid), 'grid': self.testGrid}, 201
+        # return Response(json.dumps(Grid.grid), mimetype='application/json')
+
+api.add_resource(Test, '/api/test')
+
+#####################################################
 class Grid(Resource):
     grid = []
     rows = 0
     cols = 0
 
+    messsage = "Test return"
+
     def get(self):
-        if Grid.grid:
-            return {'grid': Grid.grid}, 200
+        return {'data': self.message}, 200
+
+        # if self.grid:
+            # return {'grid': self.grid}, 200
 
     def post(self):
-        Grid.grid = []
+        self.grid = []
         parser = reqparse.RequestParser()
         parser.add_argument('rows', required=True)
         parser.add_argument('cols', required=True)
         args = parser.parse_args()
 
-        rows = int(args['rows'])
-        cols = int(args['cols'])
+        self.rows = int(args['rows'])
+        self.cols = int(args['cols'])
 
-        index = 0
-        for r in range(rows):
-            row = []
-            for c in range(cols):
-                row.append(index)
-                index += 1
-            Grid.grid.append(row)
-        return {'message':'success', 'length': sum(len(x) for x in Grid.grid)}, 201
-
-api.add_resource(Grid, '/api/grid')
-
-
-
-class Test(Resource):
-    testGrid = []
-
-    def get(self):
-        if self.testGrid:
-            return {'test2-grid': self.testGrid}, 200
-
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('rows', required=True)
-        parser.add_argument('cols', required=True)
-        args = parser.parse_args()
-
-        rows = int(args['rows'])
-        cols = int(args['cols'])
-
-        for r in range(rows):
-            row = []
-            for c in range(cols):
+        for r in range(self.rows):
+            self.row = []
+            for c in range(self.cols):
+                # Before type was <class 'dict'>
+                # serialized = json.dumps(nodeObj)
+                # row.append(serialized)
+                # After serialized type is <class 'str'>
                 nodeObj = { "id": "blank",
-                            "x":c, "y":r,
+                            "x": 0, "y": 0,
                             "drawX": 0, "drawY": 0,
                             "visited": False,
                             "parent": None
                         }
-                serialized = json.dumps(nodeObj)
-                row.append(serialized)                
-                # row.append(nodeObj)                
-            self.testGrid.append(row)
-        return {'message':'success', 'length': sum(len(x) for x in self.testGrid), 'grid': self.testGrid}, 201
-        # return Response(json.dumps(Grid.grid), mimetype='application/json')
+                self.row.append(nodeObj)           
+            self.grid.append(self.row)
 
-api.add_resource(Test, '/api/test')
+        return {'message':'success', 'length': sum(len(x) for x in self.grid)}, 201
+
+api.add_resource(Grid, '/api/grid')
 
 # @app.route('/api/grid')
 # # [(row)y][(col)x]
