@@ -32,9 +32,9 @@
                 <legend style="color:blue;font-weight:bold;">Grid Information</legend>
                 <label for="selectGridSize">Grid Size:</label>
                 <select id="selectGridSize" name="selectGridSize">
-                    <option value="5">5x5</option>
+                    <option value="5" selected="selected">5x5</option>
                     <option value="10">10x10</option>
-                    <option value="15" selected="selected">15x15</option>
+                    <option value="15">15x15</option>
                     <option value="20">20x20</option>
                     <option value="30">30x30</option>
                     <option value="40">40x40</option>
@@ -54,11 +54,9 @@
             </fieldset>
             <button type="button" id="updateGrid" onclick="updateGrid()">Update Grid!</button>
             <button type="button" id="goForIt" onclick="goForIt()">Go For It!</button>
+            <br>
             <button type="button" id="apiSetGrid" onclick="apiSetGrid()">API Set Grid</button>
             <button type="button" id="apiGetGrid" onclick="apiGetGrid()">API Get Grid</button>
-
-            <button type="button" id="apiTestGet" onclick="apiTestGet()">API Test Get</button>
-            <button type="button" id="apiTestSet" onclick="apiTestPost()">API Test Post</button>
         </div>
 
         <div id="right_panel">
