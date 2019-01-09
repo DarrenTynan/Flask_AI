@@ -26,37 +26,37 @@ def bfs():
 
 #####################################################
 class Test(Resource):
-    testGrid = [0,1,2,3,4,5]
+    testGrid = []
     rows = 0
     cols = 0
 
-    messsage = "Test return"
- 
     def get(self):
-        if self.testGrid:
-            return {'test2-grid': self.testGrid}, 200
+        print(Test.testGrid)
 
-        return {'data': 'test return'}, 200
+        if Test.testGrid:
+            return {'testGrid found': Test.testGrid}, 200
 
-        # if self.grid:
-            # return {'grid': self.grid}, 200
- 
+        return {'data': 'testGrid not found'}, 200
+
     def post(self):
-        self.testGrid = []
+        # Empty grid array
+        Test.testGrid = []
+
+        # Set up the args parser
         parser = reqparse.RequestParser()
         parser.add_argument('rows', required=True)
         parser.add_argument('cols', required=True)
         args = parser.parse_args()
  
-        self.rows = int(args['rows'])
-        self.cols = int(args['cols'])
+        rows = int(args['rows'])
+        cols = int(args['cols'])
  
-        print(self.rows)
-        print(self.cols)
+        print("rows: " + str(rows))
+        print("cols: " + str(cols))
 
-        for r in range(self.rows):
+        for r in range(rows):
             row = []
-            for c in range(self.cols):
+            for c in range(cols):
                 # Before type was <class 'dict'>
                 # serialized = json.dumps(nodeObj)
                 # row.append(serialized)
@@ -72,9 +72,9 @@ class Test(Resource):
                 serialized = json.dumps(nodeObj)
                 row.append(serialized)                
                 # row.append(nodeObj                
-            self.testGrid.append(row)
+            Test.testGrid.append(row)
 
-        return {'message':'success', 'length': sum(len(x) for x in self.testGrid), 'grid': self.testGrid}, 201
+        return {'message':'success', 'length': sum(len(x) for x in Test.testGrid), 'grid': Test.testGrid}, 201
         # return Response(json.dumps(Grid.grid), mimetype='application/json')
 
 api.add_resource(Test, '/api/test')

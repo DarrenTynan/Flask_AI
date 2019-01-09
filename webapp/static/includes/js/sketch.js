@@ -49,9 +49,9 @@ function setup()
     number_of_columns = Math.floor(p5canvas.width / size_of_tile);
     number_of_rows = Math.floor(p5canvas.height / size_of_tile);
 
-    // apiSetGrid(number_of_rows, number_of_columns);
+    apiSetTestGrid(number_of_rows, number_of_columns);
 
-    // apiGetGrid();
+    apiGetTestGrid();
 
     // Initial draw of grid.
     // for (var i = 0; i < number_of_columns; i++)
@@ -222,5 +222,60 @@ function checkCanvasMouse()
         grid[ny][nx].id = "blank";
         grid[ny][nx].draw();
     }
+}
 
+
+// ---------------------------------------------------------------
+
+function apiSetTestGrid(rows, cols)
+{
+    fetch('http://localhost:5000/api/test',
+    {
+        method: 'POST',
+        body: JSON.stringify(
+        {
+            rows: rows,
+            cols: cols
+        }),
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+    })
+}
+
+
+async function apiGetTestGrid()
+{
+    const response = await fetch('http://localhost:5000/api/test')
+    const json = await response.json()
+    console.log(json)
+    // .then((response) => response.json())
+    // .then((data) => {
+    //     let gridKey = Object.keys(data)[0];
+    //     console.log("grid key: " + gridKey);
+    //     grid = data[gridKey];
+    //     console.log("grid length: " + grid.length);
+    //     console.log("grid: " + grid[4][4]);
+
+        // let n = grid[0][0];
+        // Object.keys(n).forEach(function(key)
+        // {
+        //     console.log("key: " + key + " value: " + n[key]);
+        // })
+
+        // for (var i = 0; i < number_of_columns; i++)
+        // {
+        //     for (var j = 0; j < number_of_rows; j++)
+        //     {
+        //         let n = grid[i][j];
+        //         Object.keys(n).forEach(function(key)
+        //         {
+        //             console.log("key: " + key + " value: " + n[key]);
+        //         })
+        //     }
+        // }
+
+    // })
+
+    // .catch((err) => {
+    //     console.log(err);
+    // });
 }
