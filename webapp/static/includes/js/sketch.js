@@ -1,8 +1,11 @@
+// 'use strict';
+
 // Pointers
 let p5canvas;
 
 // The grid of nodes displayed on screen.
 let grid = [];
+let gridObj = {};
 
 // The following are calculated from UI settings.
 let number_of_columns;
@@ -44,27 +47,45 @@ function setup()
 
     // Get grid size.
     e = document.getElementById("selectGridSize");
-    size_of_tile = p5canvas.width / e.options[e.selectedIndex].value;
-
+    size_of_tile = Math.floor(p5canvas.width / e.options[e.selectedIndex].value);
     number_of_columns = Math.floor(p5canvas.width / size_of_tile);
     number_of_rows = Math.floor(p5canvas.height / size_of_tile);
 
-    apiSetTestGrid(number_of_rows, number_of_columns);
+    // Build the grid with an api call.
+    apiSetGrid(number_of_rows, number_of_columns, size_of_tile);
 
-    apiGetTestGrid();
+    // Retern from a fetch promise and act accordingly.
+    let result = apiGetGrid();
+    result.then(function(result)
+    {
+        gridObj = result;
+        // Debug - get keys and values
+        for (const [key, value] of Object.entries(gridObj[0][0]))
+        {
+            console.log(key + " = " + value);
+        }
+        console.log("*********************");
 
-    // Initial draw of grid.
-    // for (var i = 0; i < number_of_columns; i++)
-    // {
-    //     for (var j = 0; j < number_of_rows; j++)
-    //     {
-    //         grid[i][j].draw();
-    //     }
-    // }
+        // Initial draw of grid.
+        for (var i = 0; i < number_of_columns; i++)
+        {
+            for (var j = 0; j < number_of_rows; j++)
+            {
+                rect(gridObj[i][j].drawX, gridObj[i][j].drawY, gridObj[i][j].size, gridObj[i][j].size);
+            }
+        }
+    })
 
 }
 
-function apiSetGrid(rows, cols)
+/**
+ * API call to set the grid.
+ * 
+ * @param {*} rows - number of rows
+ * @param {*} cols - number of columns
+ * @param {*} size - the size of each node
+ */
+function apiSetGrid(rows, cols, size)
 {
     fetch('http://localhost:5000/api/grid',
     {
@@ -72,89 +93,36 @@ function apiSetGrid(rows, cols)
         body: JSON.stringify(
         {
             rows: rows,
-            cols: cols
+            cols: cols,
+            size: size
         }),
         headers: { "Content-Type": "application/json; charset=utf-8" }
     })
 }
 
-async function apiGetGrid()
-{
-    const response = await fetch('http://localhost:5000/api/grid')
-    const json = await response.json()
-    console.log(json)
-    // .then((response) => response.json())
-    // .then((data) => {
-    //     let gridKey = Object.keys(data)[0];
-    //     console.log("grid key: " + gridKey);
-    //     grid = data[gridKey];
-    //     console.log("grid length: " + grid.length);
-    //     console.log("grid: " + grid[4][4]);
-
-        // let n = grid[0][0];
-        // Object.keys(n).forEach(function(key)
-        // {
-        //     console.log("key: " + key + " value: " + n[key]);
-        // })
-
-        // for (var i = 0; i < number_of_columns; i++)
-        // {
-        //     for (var j = 0; j < number_of_rows; j++)
-        //     {
-        //         let n = grid[i][j];
-        //         Object.keys(n).forEach(function(key)
-        //         {
-        //             console.log("key: " + key + " value: " + n[key]);
-        //         })
-        //     }
-        // }
-
-    // })
-
-    // .catch((err) => {
-    //     console.log(err);
-    // });
-}
-
-// function apiGetGrid()
-// {
-//     fetch('http://localhost:5000/api/test')
-//     .then((response) => response.json())
-//     .then((data) => {
-//         let gridKey = Object.keys(data)[0];
-//         console.log("grid key: " + gridKey);
-//         grid = data[gridKey];
-//         console.log("grid length: " + grid.length);
-//         console.log("grid: " + grid[4][4]);
-
-//         // let n = grid[0][0];
-//         // Object.keys(n).forEach(function(key)
-//         // {
-//         //     console.log("key: " + key + " value: " + n[key]);
-//         // })
-
-//         // for (var i = 0; i < number_of_columns; i++)
-//         // {
-//         //     for (var j = 0; j < number_of_rows; j++)
-//         //     {
-//         //         let n = grid[i][j];
-//         //         Object.keys(n).forEach(function(key)
-//         //         {
-//         //             console.log("key: " + key + " value: " + n[key]);
-//         //         })
-//         //     }
-//         // }
-
-//     })
-
-//     .catch((err) => {
-//         console.log(err);
-//     });
-// }
 
 /**
- * Loop through grid and call draw.
+ * Asynchronous functions to fetch json grid from api.
  */
+async function apiGetGrid()
+{
+    try
+    {
+        let response = await fetch('http://localhost:5000/api/grid')
+        let json = await response.json()
+    
+        let gridKey = Object.keys(json)[0];
+        let grid = json[gridKey];
+
+        return grid; 
+    }
+
+    catch(err)
+    {
+        console.log(err);
+    };
+}
+
 function draw()
 {
 }
@@ -224,58 +192,3 @@ function checkCanvasMouse()
     }
 }
 
-
-// ---------------------------------------------------------------
-
-function apiSetTestGrid(rows, cols)
-{
-    fetch('http://localhost:5000/api/test',
-    {
-        method: 'POST',
-        body: JSON.stringify(
-        {
-            rows: rows,
-            cols: cols
-        }),
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-    })
-}
-
-
-async function apiGetTestGrid()
-{
-    const response = await fetch('http://localhost:5000/api/test')
-    const json = await response.json()
-    console.log(json)
-    // .then((response) => response.json())
-    // .then((data) => {
-    //     let gridKey = Object.keys(data)[0];
-    //     console.log("grid key: " + gridKey);
-    //     grid = data[gridKey];
-    //     console.log("grid length: " + grid.length);
-    //     console.log("grid: " + grid[4][4]);
-
-        // let n = grid[0][0];
-        // Object.keys(n).forEach(function(key)
-        // {
-        //     console.log("key: " + key + " value: " + n[key]);
-        // })
-
-        // for (var i = 0; i < number_of_columns; i++)
-        // {
-        //     for (var j = 0; j < number_of_rows; j++)
-        //     {
-        //         let n = grid[i][j];
-        //         Object.keys(n).forEach(function(key)
-        //         {
-        //             console.log("key: " + key + " value: " + n[key]);
-        //         })
-        //     }
-        // }
-
-    // })
-
-    // .catch((err) => {
-    //     console.log(err);
-    // });
-}
