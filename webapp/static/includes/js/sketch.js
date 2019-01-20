@@ -19,7 +19,7 @@ let animate = false;
 /**
  * p5 setup function.
  */
-function setup()
+async function setup()
 {
     // Get width of <div>
     var p5canvas_width = document.getElementById("p5canvas").offsetWidth;
@@ -73,7 +73,14 @@ function setup()
         }
     }
 
-    console.log(Object.entries(gridObj[0][0]));
+	// Initial draw of grid.
+	for (var i = 0; i < number_of_columns; i++)
+	{
+		for (var j = 0; j < number_of_rows; j++)
+		{
+			rect(gridObj[i][j].drawX + 2, gridObj[i][j].drawY + 2, gridObj[i][j].size - 4, gridObj[i][j].size - 4);
+		}
+	}
 
     console.log("**** gridObj outside of promise ****");
     // Debug - get keys and values
