@@ -53,27 +53,25 @@ function setup()
     apiSetGrid(number_of_rows, number_of_columns, size_of_tile);
 
     // Return from a fetch promise and act accordingly.
-    let result = apiGetGrid();
-    result.then(function(result)
+    let result = await apiGetGrid();
+   
+    gridObj = result;
+    console.log("**** gridObj in promise ****");
+    // Debug - get keys and values
+    for (const [key, value] of Object.entries(gridObj[0][0]))
     {
-        gridObj = result;
-        console.log("**** gridObj in promise ****");
-        // Debug - get keys and values
-        for (const [key, value] of Object.entries(gridObj[0][0]))
-        {
-            console.log(key + " = " + value);
-        }
-        console.log("*********************");
+        console.log(key + " = " + value);
+    }
+    console.log("*********************");
 
-        // Initial draw of grid.
-        for (var i = 0; i < number_of_columns; i++)
+    // Initial draw of grid.
+    for (var i = 0; i < number_of_columns; i++)
+    {
+        for (var j = 0; j < number_of_rows; j++)
         {
-            for (var j = 0; j < number_of_rows; j++)
-            {
-                rect(gridObj[i][j].drawX + 2, gridObj[i][j].drawY + 2, gridObj[i][j].size - 4, gridObj[i][j].size - 4);
-            }
+            rect(gridObj[i][j].drawX + 2, gridObj[i][j].drawY + 2, gridObj[i][j].size - 4, gridObj[i][j].size - 4);
         }
-    })
+    }
 
     console.log(Object.entries(gridObj[0][0]));
 
