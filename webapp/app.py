@@ -1,23 +1,22 @@
 from flask import Flask, render_template, json, Response, Request
 from flask_restful import Resource, Api
-
 from flask_restful import reqparse
+# from my_ai_module.Array2d import test
+
+print('app.py: %s' % __name__)
+# Array2d.test()
 
 app = Flask(__name__)
-app.debug = True
+# app.debug = True
 api = Api(app)
 
-posts = [
-    {
-        'author': 'Darren',
-        'title': 'Post title'
-    }
-]
+# a2d = my_ai_module.Array2d()
+# a2d.test()
 
 @app.route('/')
 def index():
     title = 'Data Structures and Algorithms'        
-    return render_template('index.html', title=title, posts=posts)
+    return render_template('index.html', title=title)
 
 @app.route('/bfs')
 def bfs():
@@ -73,4 +72,4 @@ class Grid(Resource):
 api.add_resource(Grid, '/api/grid')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

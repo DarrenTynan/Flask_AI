@@ -1,5 +1,3 @@
-// 'use strict';
-
 // Pointers
 let p5canvas;
 
@@ -54,11 +52,12 @@ function setup()
     // Build the grid with an api call.
     apiSetGrid(number_of_rows, number_of_columns, size_of_tile);
 
-    // Retern from a fetch promise and act accordingly.
+    // Return from a fetch promise and act accordingly.
     let result = apiGetGrid();
     result.then(function(result)
     {
         gridObj = result;
+        console.log("**** gridObj in promise ****");
         // Debug - get keys and values
         for (const [key, value] of Object.entries(gridObj[0][0]))
         {
@@ -71,10 +70,20 @@ function setup()
         {
             for (var j = 0; j < number_of_rows; j++)
             {
-                rect(gridObj[i][j].drawX, gridObj[i][j].drawY, gridObj[i][j].size, gridObj[i][j].size);
+                rect(gridObj[i][j].drawX + 2, gridObj[i][j].drawY + 2, gridObj[i][j].size - 4, gridObj[i][j].size - 4);
             }
         }
     })
+
+    console.log(Object.entries(gridObj[0][0]));
+
+    console.log("**** gridObj outside of promise ****");
+    // Debug - get keys and values
+    for (const [key, value] of Object.entries(gridObj[0][0]))
+    {
+        console.log(key + " = " + value);
+    }
+    console.log("*********************");
 
 }
 
